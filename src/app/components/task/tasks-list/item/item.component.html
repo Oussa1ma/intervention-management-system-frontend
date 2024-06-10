@@ -1,0 +1,178 @@
+<div
+  class="bg-light my-tasks"
+  *ngFor="let task of tasks | filterby: selectedFilter : searchTerm"
+>
+  <div
+    [ngClass]="{
+      bgLight: task.progres == 0,
+      bgTerminee: task.progres == 100,
+      bgEnCours: task.progres != 0 && task.progres != 100
+    }"
+    class="row py-4 text-center d-flex align-items-center"
+  >
+    <div
+      class="col-2 col-md-2 d-flex align-items-center"
+    >
+      <a
+        style="width: fit-content;"
+        class="fa fa-caret-down arrow-down xs ml-1 mr-2 mr-lg-3 mr-xl-4"
+        data-toggle="modal"
+        data-target="#exampleModal"
+        (click)="open(details, task._id)"
+      ></a>
+        <span *ngIf="selectedFilter === 'task'" class="text-left"
+              appHighLight [searchedWord]="searchTerm" [content]="task.title"  
+              [classToApply]="'highlight'" [setTitle]="'true'"
+              (click)="deleteTask(task._id)"
+              >
+          {{ task.title }}
+        </span>
+        <span *ngIf="selectedFilter != 'task'"
+              class="text-left"
+              (click)="deleteTask(task._id)"
+              >
+          {{ task.title }}
+        </span>
+    </div>
+<!-- technicien and priority form end -->
+    <form class="row col-4 col-md-4" [formGroup]="taskForm">
+      <div class="col-7 col-md-6 text-center">
+        <select
+          formControlName="technicien"
+          class="selectBox badge"
+          (change)="updateTaskOwner(task._id, technicien.value)"
+        >
+          <option>{{ task.username }}</option>
+          <ng-container *ngFor="let technicien of techniciens">
+            <option 
+              *ngIf="technicien.username != task.username"
+              style="
+                border: none;
+                background: rgb(202, 202, 202);
+                border-radius: 5px;
+                width: 70px;
+              "
+            >
+              {{ technicien.username }}
+            </option>
+          </ng-container>
+        </select>
+      </div>
+
+      <div class="col-5 col-md-6 text-center">
+        <select
+          formControlName="priority"
+          class="prioritySelectBfox"
+          class="badge"
+          [ngClass]="{
+            haute: task.priority == 'Haute',
+            moyenne: task.priority == 'Moyenne',
+            faible: task.priority == 'Faible'
+          }"
+          (change)="updateTaskPriority(task._id, priority.value)"
+        >
+          <option>
+            {{ task.priority }}
+          </option>
+          <ng-container *ngFor="let priority of priorities">
+            <option *ngIf="priority != task.priority" class="prioritySelectBox">
+              {{ priority != task.priority ? priority : "Autre" }}
+            </option>
+          </ng-container>
+        </select>
+      </div>
+    </form>
+<!-- technicien and priority form end -->
+    
+    <div class="col-2 col-md-2 text-center">
+      <span   class="client-badge badge"
+              *ngIf="selectedFilter === 'client'" 
+              appHighLight [searchedWord]="searchTerm" [content]="task.client"  
+              [classToApply]="'highlight'" [setTitle]="'true'">
+        {{task.client}}
+      </span>
+      <span *ngIf="selectedFilter != 'client'"
+          class="client-badge badge">
+        {{task.client}}
+      </span>
+    </div>
+
+    <div class="col-2 col-md-2 text-center">
+      <span>{{ task.progres }}%</span>
+    </div>
+
+
+    <div class="col-2 col-md-2 text-center">
+      <span>Il y a {{ getDateDifference(task.dateCreation) }}</span>
+    </div>
+
+    <!-- Pop up modal start  -->
+    <ng-template #details let-modal>
+      <div class="modal-header bg-light">
+        <h5 class="modal-title f-w-600" id="exampleModalLabel">Details</h5>
+      </div>
+      <div class="modal-body bg-light">
+        <h5 class="f-w-bold text-center mb-4">{{ task.title }}</h5>
+        <div class="description mb-4">
+          <h6 style="color: darkcyan" class="f-w-bold">
+            <i class="fa fa-bookmark-o fa-xs" aria-hidden="true"></i>
+            Description
+          </h6>
+          <form class="text-center" [formGroup]="descriptionForm">
+            <div class="d-flex justify-content-center mx-auto">
+              <textarea
+                ngbAutoFocus
+                class="form-control description mr-1"
+                formControlName="description"
+                id="descriptionInput"
+                autocomplete="off"
+              >
+                {{ task.description }}
+              </textarea>
+            </div>
+          </form>
+        </div>
+
+        <div class="description mb-4">
+          <h6 class="text-left mb-1 modal-elemnt-title">
+            <i
+              class="fa fa-pencil-square-o fa-xs"
+              aria-hidden="true"
+            ></i>
+            Rapport
+          </h6>
+          <span class="report-item ml-2 text-left">Titre</span>
+          <div class="p-3 text-dark report-style">
+            {{ task.report?.title }}
+          </div>
+          <div>
+            <span class="report-item ml-2 text-left">Contenu</span>
+            <div [innerHtml]="task.report?.content" class="p-3 text-dark report-style">
+              <!-- {{ task.report?.content }} -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer bg-light">
+        <button
+          class="btn btn-sm btn-secondary"
+          type="button"
+          data-dismiss="modal"
+          (click)="modal.dismiss('Cross click')"
+        >
+          Annuler
+        </button>
+        <button
+          class="btn btn-sm btn-secondary"
+          type="button"
+          data-dismiss="modal"
+          (click)="updateTaskDescription(task._id, description.value)"
+          (click)="modal.dismiss('Cross click')"
+        >
+          Enregistrer
+        </button>
+      </div>
+    </ng-template>
+    <!-- Pop up modal end -->
+  </div>
+</div>

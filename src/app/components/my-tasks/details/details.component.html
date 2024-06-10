@@ -1,0 +1,142 @@
+<div class="container-fluid bulk-cate">
+  <div class="card myCard">
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items center">
+        <span routerLink="/my-tasks"
+          ><i class="fa fa-chevron-left mr-1" aria-hidden="true"></i>Back</span
+        >
+        <span class="date"
+          >Il y a {{ getDateDifference(myTask?.dateCreation) }}</span
+        >
+      </div>
+      <h6 class="f-w-bold mb-4 pseudo_border">{{ myTask?.title }}</h6>
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <div
+          [ngClass]="{
+            myHaute: myTask?.priority == 'Haute',
+            myMoyenne: myTask?.priority == 'Moyenne',
+            myFaible: myTask?.priority == 'Faible'
+          }"
+        >
+          <span>
+            {{ myTask?.priority }}
+          </span>
+        </div>
+        <div
+          *ngIf="!isBegun"
+          (click)="interactionDisabled = !interactionDisabled"
+          (click)="isPaused = !isPaused"
+          (click)="isBegun = !isBegun"
+          class="d-flex flex-column align-items-center"
+        >
+          <i class="fa fa-play-circle fa-lg mb-1" aria-hidden="true"></i>
+          <span class="text">Commencer</span>
+        </div>
+        <div
+          *ngIf="isPaused"
+          (click)="interactionDisabled = !interactionDisabled"
+          (click)="isPaused = !isPaused"
+          class="d-flex flex-column align-items-center"
+        >
+          <i class="fa fa-pause-circle fa-lg mb-1" aria-hidden="true"></i>
+          <span class="text">Pause</span>
+        </div>
+        <div
+          *ngIf="!isPaused && isBegun && myTask?.progres != 100"
+          (click)="interactionDisabled = !interactionDisabled"
+          (click)="isPaused = !isPaused"
+          class="d-flex flex-column align-items-center"
+        >
+          <i class="fa fa-repeat fa-lg mb-1" aria-hidden="true"></i>
+          <span class="text">Reprendre</span>
+        </div>
+        <div
+          *ngIf="myTask?.progres == 100"
+          routerLink="/my-tasks"
+          class="d-flex flex-column align-items-center"
+        >
+          <i class="fa fa-check-circle fa-lg mb-1" aria-hidden="true"></i>
+          <span class="text">Fermer</span>
+        </div>
+        <form [formGroup]="progresForm">
+          <select
+            [attr.disabled]="interactionDisabled ? '' : null"
+            formControlName="progres"
+            class="selectBox badge modal-select-box"
+            style="text-align: center !important"
+            (change)="updateProgres(myTask._id, progres.value)"
+          >
+            <option>{{ myTask?.progres }}%</option>
+            <ng-container *ngFor="let progres of allProgres">
+              <option
+                *ngIf="progres != myTask?.progres"
+                style="
+                  border: none;
+                  background: rgb(202, 202, 202);
+                  border-radius: 5px;
+                  width: 70px;
+                "
+              >
+                {{ progres }}
+              </option>
+            </ng-container>
+          </select>
+        </form>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div>
+        <div class="mt-4">
+          <h4 class="myDescription">Description</h4>
+          <p class="p-1 text-dark">{{ myTask?.description }}</p>
+        </div>
+        <div class="mt-3">
+          <h4 class="myDescription">Rapport</h4>
+          <span
+            *ngIf="!showReport"
+            (click)="showReport = !showReport"
+            class="d-flex justify-content-center align-items-center"
+            ><i class="fa fa-chevron-down mr-1" aria-hidden="true"></i
+            >Show</span
+          >
+          <span
+            *ngIf="showReport"
+            (click)="showReport = !showReport"
+            class="d-flex justify-content-center align-items-center"
+            ><i class="fa fa-chevron-up mr-1" aria-hidden="true"></i>Hide</span
+          >
+          <div *ngIf="showReport">
+            <form [formGroup]="reportForm">
+              <div class="mb-3">
+                <span class="report-item ml-2 text-left">Titre</span>
+                <textarea
+                  autofocus="disabled"
+                  type="textarea"
+                  id="reportTitle"
+                  rows="1"
+                  style="resize: none; border-radius: 0px 5px 0px 5px"
+                  formControlName="reportTitle"
+                  class="form-control rapport"
+                >
+                    {{ myTask?.report?.title }}
+                  </textarea
+                >
+              </div>
+              <div class="text-dark">
+                <span class="report-item ml-2 text-left">Contenu</span>
+
+                <ckeditor
+                  #editor
+                  [editor]="Editor"
+                  [data]="myTask?.report?.content"
+                ></ckeditor>
+              </div>
+              <!-- </div> -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

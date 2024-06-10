@@ -1,0 +1,130 @@
+<!-- Container-fluid starts-->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header"></div>
+        <div class="card-body">
+          <div class="row pproduct-adding">
+            <div class="col-12">
+              <form
+                class="needs-validation"
+                [formGroup]="taskForm"
+                (ngSubmit)="onSubmit()"
+              >
+                <div class="add-pproduct-form">
+                  <div class="form-group row">
+                    <label for="title" class="col-sm-4 col-xl-3 mb-0"
+                      >Titre<span style="color: red">*</span> :</label
+                    >
+                    <input
+                      class="form-control col-xl-8 col-md-7"
+                      formControlName="title"
+                      id="title"
+                      type="text"
+                      required
+                    />
+                  </div>
+
+                  <div class="form-group row">
+                    <label
+                      for="exampleFormControlSelect1"
+                      class="col-xl-3 col-sm-4 mb-0"
+                      >Assigner à :</label
+                    >
+                    <select
+                      class="form-control digits col-xl-8 col-md-7"
+                      formControlName="assignTo"
+                      id="exampleFormControlSelect1"
+                      (change)="selectTechnicien($event)"
+                    >
+                      <option *ngIf="!techniciens" selected value="">...</option>
+                      <option *ngFor="let technicien of techniciens">
+                        {{ technicien.username }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="form-group row">
+                    <label
+                      for="exampleFormControlSelect1"
+                      class="col-xl-3 col-sm-4 mb-0"
+                      >Type :</label
+                    >
+                    <select
+                      class="form-control digits col-xl-8 col-md-7"
+                      formControlName="type"
+                      id="exampleFormControlSelect1"
+                      (change)="selectType($event)"
+                    >
+                      <option *ngFor="let type of types">{{ type }}</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group row">
+                    <label
+                      for="exampleFormControlSelect1"
+                      class="col-xl-3 col-sm-4 mb-0"
+                      >Priorité :</label
+                    >
+                    <select
+                      class="form-control digits col-xl-8 col-md-7"
+                      formControlName="priority"
+                      id="exampleFormControlSelect1"
+                      (change)="selectPriority($event)"
+                    >
+                      <option *ngFor="let priority of priorities">
+                        {{ priority }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="client" class="col-sm-4 col-xl-3 mb-0"
+                      >Client<span style="color: red">*</span> :</label
+                    >
+                    <input
+                      class="form-control col-xl-8 col-md-7"
+                      formControlName="client"
+                      id="client"
+                      type="text"
+                      required
+                    />
+                  </div>
+
+                  <div
+                    class="form-group form-floating row d-flex align-items-center"
+                  >
+                    <label class="col-xl-3 col-sm-4 mb-0" for="floatingTextarea"
+                      >Description :</label
+                    >
+                    <textarea
+                      class="form-control col-xl-8 col-md-7"
+                      formControlName="description"
+                      placeholder="Description.."
+                      id="floatingTextarea"
+                      required
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group row mb-0">
+                  <div class="product-buttons col-sm-8 offset-xl-3 offset-sm-4">
+                    <button
+                      type="submit"
+                      [disabled]="!taskForm.valid"
+                      class="btn btn-primary mr-1"
+                    >
+                      Créer
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Container-fluid Ends-->

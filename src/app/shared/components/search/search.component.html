@@ -1,0 +1,21 @@
+    <div class="d-flex justify-content-center">
+      <input
+      class="search-input"
+      #searchInput
+      type="text"
+      ngModel
+      (ngModelChange)="emitSearchInputValue($event)"
+      placeholder="Rechercher par.."/>
+      <select *ngIf="isAdmin" class="search-select"
+      (change)="emitSelectedFilter($event)" value="tâche" #select>
+        <option value="task">Tâche</option>
+        <option value="technicien">Technicien</option>
+        <option value="client">Client</option>
+      </select>
+      <select *ngIf="!isAdmin" 
+      (change)="emitSelectedFilter($event)"
+      class="search-select" value="tâche" #select>
+        <option value="task">Tâche</option>
+        <option value="client">Client</option>
+      </select>
+    </div>

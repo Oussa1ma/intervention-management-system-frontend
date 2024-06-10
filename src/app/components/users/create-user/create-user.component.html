@@ -1,0 +1,101 @@
+<!-- Container-fluid starts-->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card tab2-card">
+                <!-- <div class="card-header"> -->
+                <!-- <h5> Ajouter un utilisateur</h5> -->
+                <!-- </div> -->
+                <div class="card-body tab2-card">
+                    <ngb-tabset class="tab-coupon">
+                        <ngb-tab title="Compte">
+                            <ng-template ngbTabContent>
+                                <div class="tab-pane fade active show" id="account" role="tabpanel"
+                                    aria-labelledby="account-tab">
+                                    <form [formGroup]="accountForm" class="needs-validation user-add" novalidat #registerForm="ngForm">
+                                        <div class="form-group row">
+                                            <label for="validationCustom0" class="col-xl-3 col-md-4"><span>*</span>
+                                                Nom</label>
+                                            <input class="form-control col-xl-8 col-md-7" id="validationCustom0"
+                                                type="text" formControlName="username" #username>
+                                        </div>
+                                        <span class="text-danger input-validator"
+                                        *ngIf="((username.touched && accountForm.controls['email'].invalid) || registerForm.submitted) && email.errors?.required">
+                                        Ce champ est obligatoire
+                                        </span>
+    
+                                        <div class="form-group row">
+                                            <label for="validationCustom1" class="col-xl-3 col-md-4"><span>*</span>
+                                                Email</label>
+                                            <input class="form-control col-xl-8 col-md-7" id="validationCustom1"
+                                                type="text" formControlName="email" #email>
+                                            
+                                            <span class="text-danger input-validator" *ngIf="accountForm.controls['email'].touched && registerForm.submitted">
+                                                Entrez l'email.
+                                            </span>
+                                            <span class="text-danger input-validator" *ngIf="accountForm.controls['email'].touched && accountForm.controls['email'].dirty && accountForm.controls.email.errors">
+                                                Adresse Email non valide.
+                                            </span>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="validationCustom2" class="col-xl-3 col-md-4"><span>*</span>
+                                                Mot de passe</label>
+                                            <input class="form-control col-xl-8 col-md-7" id="validationCustom2"
+                                                type="password" formControlName="password" #password>
+                                            <div *ngIf="(accountForm.controls['password'].touched && accountForm.controls['password'].dirty && accountForm.controls['password'].invalid)"
+                                                class="text-danger input-validator">
+                                                <span *ngIf="accountForm.controls['password'].errors.required">mot de
+                                                    passe est obligatoire.</span>
+                                                <span *ngIf="accountForm.controls['password'].errors.minlength">5 char
+                                                    au min.</span>
+                                                <span *ngIf="accountForm.controls['password'].errors.pattern">5 char au
+                                                    min.</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="validationCustom3" class="col-xl-3 col-md-4"><span>*</span>
+                                                Confirmer le mot de passe</label>
+                                            <input class="form-control col-xl-8 col-md-7" id="validationCustom3"
+                                                type="password" formControlName="confirmPwd" #confirmPwd
+                                                pattern={{password.value}}>
+                                            <div *ngIf="accountForm.controls['confirmPwd'].invalid && (accountForm.controls['confirmPwd'].touched || accountForm.controls['confirmPwd'].dirty)"
+                                                class="text-danger input-validator">
+                                                <span
+                                                    *ngIf="accountForm.controls['confirmPwd'].errors?.required">confirmation
+                                                    de mot de passe est obligatoire.</span>
+                                                <span *ngIf="accountForm.controls['confirmPwd'].errors?.pattern">le mot
+                                                    de passe est incorrect.</span>
+                                            </div>
+                                        </div>
+
+                                        
+                                        
+                                        <div class="row form-group role-input-container">
+                                            <div class="col-xl-3 col-md-4 ml-0"><span class="input-star">* </span>Role</div>
+                                            <div class="custom-control custom-checkbox col-xl-8 col-md-7">
+                                                <input type="checkbox" formControlName="role" class="custom-control-input" id="customCheck">
+                                                <label class="custom-control-label" for="customCheck">Admin</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="validationCustom5" class="col-xl-3 col-md-4"><span>*</span>
+                                                Tel</label>
+                                            <input class="form-control col-xl-8 col-md-7" id="validationCustom5"
+                                                type="text" formControlName="tel" #tel>
+                                        </div>
+                                    </form>
+                                </div>
+                            </ng-template>
+                        </ngb-tab>
+                    </ngb-tabset>
+                    <div class="pull-right">
+                        <button type="button" [disabled]="accountForm.pristine || accountForm.invalid"
+                            class="btn btn-primary" (click)="addTechnicien()">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Container-fluid Ends-->

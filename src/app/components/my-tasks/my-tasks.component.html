@@ -1,0 +1,316 @@
+<div class="container-fluid bulk-cate">
+  <div class="card myCard" style="overflow-x: auto">
+    <!-- Header start -->
+    <div class="card-header">
+      <div
+        class="d-flex flex-column justify-content-between align-items-center flex-sm-row mb-4"
+      >
+        <!-- Filter navigation start -->
+        <nav class="filter-nav card-header-container">
+          <ul class="w-100 d-flex justify-content-start text-dark">
+            <li
+              #tout
+              (click)="getTasks()"
+              (click)="applyStyle(tout)"
+              class="navigation-item"
+            >
+              Tout
+            </li>
+            <li
+              #nouvelle
+              (click)="newTasksFilter()"
+              (click)="applyStyle(nouvelle)"
+              class="navigation-item"
+            >
+              Nouvelle
+            </li>
+            <li
+              #enCours
+              (click)="currentTasksFilter()"
+              (click)="applyStyle(enCours)"
+              class="navigation-item"
+            >
+              En Cours
+            </li>
+            <li
+              #terminee
+              (click)="closedTasksFilter()"
+              (click)="applyStyle(terminee)"
+              class="navigation-item mr-0"
+            >
+              Terminée
+            </li>
+          </ul>
+        </nav>
+        <!-- Filter navigation end -->
+      </div>
+      <app-search
+        (searchInputEvent)="searchInputEvent($event)"
+        (selectedFilterEvent)="selectedFilterEvent($event)"
+      >
+      </app-search>
+    </div>
+
+    <!-- Task list table start -->
+    <div class="card-body" style="min-width: 770px">
+      <div>
+        <!-- Task list table header start -->
+        <div class="row mb-3">
+          <div class="col-2 col-md-2 font-weight-bold text-center">Tâche</div>
+          <div class="col-2 col-md-2 font-weight-bold text-center">
+            Technicien
+          </div>
+          <div class="col-2 col-md-2 font-weight-bold text-center">
+            Priorité
+          </div>
+          <div class="col-2 col-md-2 font-weight-bold text-center">Client</div>
+          <div class="row col-4 col-md-4">
+            <div class="col-5 col-md-6 font-weight-bold text-center">
+              Progrès
+            </div>
+            <div class="col-6 col-md-6 font-weight-bold text-center">
+              Création
+            </div>
+          </div>
+        </div>
+        <!-- Task list table header end -->
+
+        <div
+          *ngFor="let task of myTasks | filterby: selectedFilter:searchTerm"
+          class="my-tasks"
+        >
+          <!-- Task list table body start -->
+          <div
+            [ngClass]="{
+              bgLight: task.progres == 0,
+              bgTerminee: task.progres == 100,
+              bgEnCours: task.progres != 0 && task.progres != 100
+            }"
+            class="row py-4 text-center d-flex align-items-center"
+          >
+            <div class="col-2 col-md-2 text-center d-flex align-items-center">
+              <a
+                style="width: fit-content"
+                class="fa fa-caret-down arrow-down xs ml-1 mr-2 mr-lg-3 mr-xl-4"
+                data-toggle="modal"
+                data-target="#exampleModal"
+                (click)="open(details, task._id)"
+              ></a>
+              <span
+                class="text-left"
+                *ngIf="selectedFilter === 'task'"
+                class="text-left"
+                appHighLight
+                [searchedWord]="searchTerm"
+                [content]="task.title"
+                [classToApply]="'highlight'"
+                [setTitle]="'true'"
+              >
+                {{ task.title }}
+              </span>
+              <span *ngIf="selectedFilter != 'task'" class="text-left">
+                {{ task.title }}
+              </span>
+            </div>
+
+            <div class="col-2 col-md-2">
+              <span class="mySelectBox badge">
+                {{ task.username }}
+              </span>
+            </div>
+
+            <div class="col-2 col-md-2 text-center">
+              <span
+                class="badge mySelectBox"
+                [ngClass]="{
+                  myHaute: task.priority == 'Haute',
+                  myMoyenne: task.priority == 'Moyenne',
+                  myFaible: task.priority == 'Faible'
+                }"
+              >
+                {{ task.priority }}
+              </span>
+            </div>
+
+            <div class="col-2 col-md-2 text-center">
+              <span
+                class="client-badge badge"
+                *ngIf="selectedFilter === 'client'"
+                appHighLight
+                [searchedWord]="searchTerm"
+                [content]="task.client"
+                [classToApply]="'highlight'"
+                [setTitle]="'true'"
+              >
+                {{ task.client }}
+              </span>
+              <span
+                *ngIf="selectedFilter != 'client'"
+                class="client-badge badge"
+              >
+                {{ task.client }}
+              </span>
+            </div>
+
+            <form
+              class="row col-4 col-md-4 text-center align-items-center"
+              [formGroup]="myTasksForm"
+            >
+              <div class="col-5 col-md-6 text-center">
+                <select
+                  formControlName="progres"
+                  class="selectBox badge"
+                  (change)="updateProgres(task._id, progres.value)"
+                >
+                  <option>{{ task.progres }}%</option>
+                  <ng-container *ngFor="let progres of allProgres">
+                    <option
+                      *ngIf="progres != task.progres"
+                      style="
+                        border: none;
+                        background: rgb(202, 202, 202);
+                        border-radius: 5px;
+                        width: 70px;
+                      "
+                    >
+                      {{ progres }}
+                    </option>
+                  </ng-container>
+                </select>
+              </div>
+              <div class="col-6 col-md-6 text-center">
+                <span>Il y a {{ getDateDifference(task.dateCreation) }}</span>
+              </div>
+            </form>
+          </div>
+          <!-- Task list table body end -->
+
+          <!-- Pop up modal start -->
+          <ng-template #details let-modal>
+            <div class="modal-header bg-light">
+              <h5 class="modal-title f-w-600" id="exampleModalLabel">
+                Details
+              </h5>
+            </div>
+            <div class="modal-body bg-light">
+              <h5 class="f-w-bold mb-4 pseudo_border">{{ task.title }}</h5>
+              <div class="description mb-4">
+                <h6 class="modal-elemnt-title">
+                  <i class="fa fa-bookmark-o fa-xs" aria-hidden="true"></i>
+                  Description
+                </h6>
+                <div class="pl-4 text-dark">
+                  {{ task.description }}
+                </div>
+              </div>
+
+              <form [formGroup]="myTasksForm">
+                <div class="description mb-4">
+                  <h6 class="text-left mb-1 modal-elemnt-title">
+                    <i
+                      class="fa fa-pencil-square-o fa-xs"
+                      aria-hidden="true"
+                    ></i>
+                    Rapport
+                  </h6>
+                  <div class="mb-3">
+                    <span class="report-item ml-2 text-left">Titre</span>
+                    <textarea
+                      autofocus="disabled"
+                      type="textarea"
+                      id="reportTitle"
+                      rows="1"
+                      style="resize: none; border-radius: 0px 5px 0px 5px"
+                      formControlName="reportTitle"
+                      class="form-control rapport"
+                    >
+                      {{ task?.report?.title }}
+                    </textarea>
+                  </div>
+                  <div class="text-dark">
+                    <span class="report-item ml-2 text-left">Contenu</span>
+
+                    <ckeditor
+                      #editor
+                      [editor]="Editor"
+                      [data]="task.report?.content"
+                    ></ckeditor>
+
+                    <!-- <textarea
+                      autofocus="disabled"
+                      formControlName="reportContent"
+                      class="form-control rapport"
+                      rows="6"
+                      name="rapport"
+                      placeholder="rapport...">
+                      {{ task?.report?.content }}
+                    </textarea> -->
+                  </div>
+                </div>
+
+                <div class="description mb-4">
+                  <h6 class="f-w-bold text-left modal-elemnt-title">
+                    <i
+                      class="fa fa-hourglass-half fa-xs"
+                      aria-hidden="true"
+                    ></i>
+                    Progrès
+                  </h6>
+                  <select
+                    formControlName="progres"
+                    class="selectBox badge modal-select-box"
+                    style="text-align: center !important"
+                    (change)="updateProgres(task._id, progres.value)"
+                  >
+                    <option>{{ task.progres }}%</option>
+                    <ng-container *ngFor="let progres of allProgres">
+                      <option
+                        *ngIf="progres != task.progres"
+                        style="
+                          border: none;
+                          background: rgb(202, 202, 202);
+                          border-radius: 5px;
+                          width: 70px;
+                        "
+                      >
+                        {{ progres }}
+                      </option>
+                    </ng-container>
+                  </select>
+                </div>
+              </form>
+            </div>
+
+            <div class="modal-footer bg-light">
+              <button
+                class="btn btn-sm btn-secondary"
+                type="button"
+                data-dismiss="modal"
+                (click)="modal.dismiss('Cross click')"
+              >
+                Annuler
+              </button>
+              <button
+                class="btn btn-sm btn-secondary"
+                type="button"
+                data-dismiss="modal"
+                (click)="
+                  updateTaskReport(task._id, {
+                    title: reportTitle.value,
+                    content: editor.editorInstance.getData(),
+                    owner: task.technicien
+                  })
+                "
+                (click)="modal.dismiss('Cross click')"
+              >
+                Enregistrer
+              </button>
+            </div>
+          </ng-template>
+          <!-- Pop up modal end -->
+        </div>
+        <!-- Body end -->
+      </div>
+    </div>
+  </div>
+</div>

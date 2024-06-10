@@ -1,0 +1,111 @@
+<!-- Container-fluid starts-->
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+        </div>
+        <div class="card-body">
+            <div class="btn-popup pull-right">
+                <a class="btn btn-secondary" [routerLink]="'/users/create-user'">Ajouter</a>
+            </div>
+            <div id="batchDelete" class="category-table custom-datatable transcation-datatable user-image">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Tel</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let technicien of techniciens">
+                                <td> {{ technicien.username }}</td>
+                                <td>{{ technicien.email }}</td>
+                                <td>{{ technicien.role ? 'Admin' : 'Technicien' }}</td>
+                                <td>{{ technicien.tel }}</td>
+                                <td>
+                                    <a style="display: inline;" class="btn fa fa-trash" data-toggle="modal"
+                                    data-target="#exampleModal" (click)="open(content)"
+                                    ></a>
+                                    <ng-template #content let-modal>
+                                        <div class="modal-header">
+                                            <h5 class="modal-title f-w-600" id="exampleModalLabel">Attention!</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h6>Cet utilisateur va étre supprimé definitivement, Voulez-vous continuer?</h6>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" (click)="deleteTechnicien(technicien._id)" 
+                                            (click)="modal.dismiss('Cross click')" >Oui</button>
+                                            <button class="btn btn-secondary" type="button" data-dismiss="modal"
+                                                (click)="modal.dismiss('Cross click')">Non
+                                            </button>
+                                        </div>
+                                    </ng-template>
+                                    <a style="display: inline;" class="btn fa fa-edit"
+                                    data-toggle="modal" data-target="#exampleModal" (click)="open(techDetails)" (click)="patchValues(technicien._id)"
+                                    ></a>
+                                    <ng-template #techDetails let-modal>
+                                        <div class="modal-header">
+                                            <h5 class="modal-title f-w-600" id="exampleModalLabel">Modifications</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form [formGroup]="editForm" class="needs-validation user-add" novalida>
+                                                <div class="form-group row">
+                                                    <label for="validationCustom0" class="col-xl-3 col-md-4">
+                                                        Nom</label>
+                                                    <input class="form-control col-xl-8 col-md-7" id="validationCustom0"
+                                                        type="text" formControlName="username" #username>
+                                                </div>
+                                                <div *ngIf="editForm.controls['username'].invalid && editForm.controls['username'].dirty"
+                                                    class="alert alert-danger">
+                                                    ce champ est obligatoire.
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="validationCustom1" class="col-xl-3 col-md-4">
+                                                        Email</label>
+                                                    <input class="form-control col-xl-8 col-md-7" id="validationCustom1"
+                                                        type="text" formControlName="email" #email>
+                                                    <div *ngIf="editForm.controls['email'].invalid && (editForm.controls['email'].touched || editForm.controls['email'].dirty)"
+                                                        class="alert alert-danger">
+                                                        <span *ngIf="editForm.controls['email'].errors.required">Entrez
+                                                            l'email.</span>
+                                                        <span *ngIf="editForm.controls['email'].errors.email">Veuillez saisir
+                                                            une adresse électronique valide.</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row form-group role-input-container">
+                                                    <div class="col-xl-3 col-md-3 ml-0"><span class="input-star">* </span>Role</div>
+                                                    <div class="custom-control custom-checkbox col-xl-8 col-md-8">
+                                                        <input type="checkbox" formControlName="role" class="custom-control-input" id="customCheck">
+                                                        <label class="custom-control-label" for="customCheck">Admin</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="validationCustom5" class="col-xl-3 col-md-4">
+                                                        Tel</label>
+                                                    <input class="form-control col-xl-8 col-md-7" id="validationCustom5"
+                                                        type="text" formControlName="tel" #tel>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" 
+                                            (click)="updateTechnicien(technicien._id)" (click)="modal.dismiss('Cross click')" >Enregistrer</button>
+                                            <button class="btn btn-secondary" type="button" data-dismiss="modal"
+                                            (click)="modal.dismiss('Cross click')">Annuler
+                                            </button>
+                                        </div>
+                                    </ng-template>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Container-fluid Ends-->

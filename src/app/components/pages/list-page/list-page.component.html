@@ -1,0 +1,60 @@
+<!-- Container-fluid starts-->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card mb-3">
+        <app-search
+          (searchInputEvent)="searchInputEvent($event)"
+          (selectedFilterEvent)="selectedFilterEvent($event)"
+        >
+        </app-search>
+
+        <div class="card-header">
+          <h5>Page Details</h5>
+        </div>
+        <div class="card-body">
+          <div class="custom-datatable">
+            <button
+              class="btn btn-primary mr-1 mb-3"
+              (click)="delete()"
+              style="float: right"
+            >
+              Delete
+            </button>
+            <div class="clearfix"></div>
+            <ngx-datatable
+              class="bootstrap"
+              [rows]="list_pages | filterby: selectedFilter :searchTerm"
+              [columnMode]="'force'"
+              [headerHeight]="50"
+              [footerHeight]="50"
+              [rowHeight]="'auto'"
+              [limit]="4"
+              [selected]="selected"
+              [selectionType]="'checkbox'"
+              [selectAllRowsOnPage]="false"
+              (select)="onSelect($event)"
+            >
+              <ngx-datatable-column
+                [width]="30"
+                [sortable]="false"
+                [canAutoResize]="false"
+                [draggable]="false"
+                [resizeable]="false"
+                [headerCheckboxable]="true"
+                [checkboxable]="true"
+              >
+                <button type="button" class="btn btn-primery">Delete</button>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Name"></ngx-datatable-column>
+              <ngx-datatable-column name="Status"></ngx-datatable-column>
+              <ngx-datatable-column prop="created on"></ngx-datatable-column>
+              <ngx-datatable-column prop="Priority"></ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Container-fluid Ends-->

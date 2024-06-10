@@ -1,0 +1,70 @@
+<div class="container-fluid bulk-cate">
+  <div class="card" style="overflow-x: auto">
+    <div class="card-header">
+
+      <div class="d-flex flex-column justify-content-between align-items-center flex-sm-row mb-5">
+        <nav class="filter-nav card-header-container">
+          <ul class="w-100 d-flex justify-content-start text-dark">
+            <li #tout (click)="getTasks()" (click)="applyStyle(tout)" class="navigation-item">
+              Tout
+            </li>
+            <li #nouvelle (click)="newTasks()" (click)="applyStyle(nouvelle)" class="navigation-item">
+              Nouvelle
+            </li>
+            <li #enCours (click)="currentTasks()" (click)="applyStyle(enCours)" class="navigation-item">
+              En Cours
+            </li>
+            <li #terminee (click)="closedTasks()" (click)="applyStyle(terminee)" class="navigation-item mr-0">
+              Terminée 
+            </li>
+          </ul>
+        </nav>
+
+        <button type="button"
+          class="btn btn-secondary btn-sm-sm"
+          [routerLink]="'/tasks/create-task'"
+          >
+          Créer
+        </button>
+      </div>
+
+      <app-search 
+        (searchInputEvent)="searchInputEvent($event)"
+        (selectedFilterEvent)="selectedFilterEvent($event)"
+      >
+      </app-search>
+      
+    </div>
+    <div class="card-body" style="min-width: 770px">
+      <div>
+        <div class="row mb-3">
+          <div class="col-2 col-md-2 font-weight-bold text-center">Tâche</div>
+          <div class="row col-4 col-md-4">
+            <div class="col-7 col-md-6 font-weight-bold text-center">
+              Technicien
+            </div>
+            <div class="col-5 col-md-6 font-weight-bold text-center">
+              Priorité
+            </div>
+          </div>
+          <div class="col-2 col-md-2 font-weight-bold text-center">Client</div>
+          <div class="col-2 col-md-2 font-weight-bold text-center">Progrès</div>
+          <div class="col-2 col-md-2 font-weight-bold text-center">
+            Création
+          </div>
+        </div>
+        <app-item
+          [tasks]="tasks"
+          [techniciens]="techniciens"
+          [searchTerm]="searchTerm"
+          [selectedFilter]="selectedFilter"
+          (updateTaskOwnerEvent)="updateTaskOwner($event)"
+          (updateTaskPriorityEvent)="updateTaskPriority($event)"
+          (updateTaskDescriptionEvent)="updateTaskDescription($event)"
+          (deleteTaskEvent)="deleteTask($event)"
+        >
+        </app-item>
+      </div>
+    </div>
+  </div>
+</div>
